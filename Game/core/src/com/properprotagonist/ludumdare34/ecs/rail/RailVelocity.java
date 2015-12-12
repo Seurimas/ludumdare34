@@ -17,4 +17,7 @@ public class RailVelocity implements Component {
 		vx *= factor;
 		return vx;
 	}
+	public void stop() {
+		vx = 0;
+	}
 }

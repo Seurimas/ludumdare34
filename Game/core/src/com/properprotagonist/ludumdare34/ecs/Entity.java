@@ -2,9 +2,10 @@ package com.properprotagonist.ludumdare34.ecs;
 
 import java.util.HashMap;
 
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.properprotagonist.ludumdare34.ecs.gravity.BounceComponent;
+import com.properprotagonist.ludumdare34.ecs.bounce.BounceComponent;
 
 public class Entity {
 	private HashMap<Class<? extends Component>, Component> components = new HashMap<Class<? extends Component>, Component>();
@@ -34,5 +35,12 @@ public class Entity {
 	}
 	public void removeComponent(Class<? extends Component> checkFor) {
 		components.remove(checkFor);
+	}
+	public boolean collides(Entity other) {
+		return other.getBounding().overlaps(getBounding());
+	}
+	public void move(float x, int y) {
+		bounding.x += x;
+		bounding.y += y;
 	}
 }

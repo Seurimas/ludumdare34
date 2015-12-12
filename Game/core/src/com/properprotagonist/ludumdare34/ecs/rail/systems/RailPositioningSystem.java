@@ -15,7 +15,7 @@ public class RailPositioningSystem implements ComponentSystem {
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
 		for (Entity entity : entities) {
 			RailPosition rPos = entity.getComponent(RailPosition.class);
-			entity.getBounding().x = rPos.getPosition();
+			entity.getBounding().x = rPos.getPosition() - entity.getBounding().width / 2;
 		}
 	}
 

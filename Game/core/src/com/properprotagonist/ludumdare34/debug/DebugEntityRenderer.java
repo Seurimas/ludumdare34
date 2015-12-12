@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.properprotagonist.ludumdare34.ecs.Component;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
+import com.properprotagonist.ludumdare34.ecs.danger.DangerousObstacle;
 import com.properprotagonist.ludumdare34.ecs.gravity.Weight;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.RenderSystem;
@@ -17,7 +18,7 @@ import com.properprotagonist.ludumdare34.utils.GdxUtils;
 import com.properprotagonist.ludumdare34.utils.LDUtils;
 
 public class DebugEntityRenderer implements RenderSystem {
-	private static final Class<? extends Component>[] dependencies = LDUtils.componentArray(Weight.class);
+	private static final Class<? extends Component>[] dependencies = LDUtils.componentArray();
 	@Override
 	public Class<? extends Component>[] dependencies() {
 		return dependencies;
@@ -27,9 +28,12 @@ public class DebugEntityRenderer implements RenderSystem {
 	public void draw(Batch batch, ShapeRenderer shapes, ComponentEntityList entities) {
 		batch.end();
 		shapes.begin(ShapeType.Line);
-		shapes.setColor(Color.WHITE);
 		for (Entity entity : entities) {
 			Rectangle bounding = entity.getBounding();
+			if (entity.hasComponents(DangerousObstacle.class))
+				shapes.setColor(Color.RED);
+			else
+				shapes.setColor(Color.WHITE);
 			shapes.rect(bounding.x, bounding.y, bounding.width, bounding.height);
 		}
 		shapes.end();

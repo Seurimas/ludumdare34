@@ -11,8 +11,7 @@ import com.properprotagonist.ludumdare34.utils.LDUtils;
 
 public class RailCollisionSystem implements ComponentSystem {
 	private static final Class<? extends Component>[] dependencies = LDUtils.componentArray(
-			RailObstacle.class,
-			RailPosition.class
+			RailObstacle.class
 			);
 	private final Entity target;
 	public RailCollisionSystem(Entity target) {
@@ -21,9 +20,7 @@ public class RailCollisionSystem implements ComponentSystem {
 	@Override
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
 		for (Entity entity : entities) {
-			RailObstacle obstacle = entity.getComponent(RailObstacle.class);
-			RailPosition rPos = entity.getComponent(RailPosition.class);
-			if (obstacle.collides(rPos, target))
+			if (entity.collides(target))
 				engine.handleMessage(new CollisionMessage(target, entity));
 		}
 	}

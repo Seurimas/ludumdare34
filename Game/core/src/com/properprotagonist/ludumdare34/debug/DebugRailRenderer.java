@@ -9,7 +9,7 @@ import com.properprotagonist.ludumdare34.ecs.Component;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
 import com.properprotagonist.ludumdare34.ecs.RenderSystem;
-import com.properprotagonist.ludumdare34.ecs.gravity.FloorBounceSystem;
+import com.properprotagonist.ludumdare34.ecs.bounce.FloorSystem;
 import com.properprotagonist.ludumdare34.ecs.gravity.Weight;
 import com.properprotagonist.ludumdare34.ecs.rail.RailPosition;
 import com.properprotagonist.ludumdare34.utils.GdxUtils;
@@ -30,7 +30,7 @@ public class DebugRailRenderer implements RenderSystem {
 		shapes.setColor(Color.GREEN);
 		for (Entity entity : entities) {
 			RailPosition rPos = entity.getComponent(RailPosition.class);
-			shapes.circle(rPos.getPosition(), FloorBounceSystem.FLOOR, 5);
+			shapes.circle(rPos.getPosition(), FloorSystem.FLOOR, 5);
 		}
 		shapes.end();
 		batch.begin();

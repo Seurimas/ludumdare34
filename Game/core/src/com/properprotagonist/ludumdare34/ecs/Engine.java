@@ -55,6 +55,7 @@ public class Engine {
 	}
 
 	public LinkedList<Entity> entities = new LinkedList<Entity>();
+	public LinkedList<Entity> spawned = new LinkedList<Entity>();
 	public LinkedList<Entity> removed = new LinkedList<Entity>();
 	private LinkedList<ComponentSystem> systems = new LinkedList<ComponentSystem>();
 	private LinkedList<RenderSystem> renderers = new LinkedList<RenderSystem>();
@@ -69,7 +70,11 @@ public class Engine {
 		renderers.add(renderer);
 		rendererLists.add(new ComponentEntityList(renderer.dependencies()));
 	}
+	boolean failed = false;
+	float failTimer = 0;
 	public void act(float delta) {
+		if (failed)
+			failTimer -= delta;
 		for (int i = 0;i < systems.size();i++) {
 			ComponentSystem system = systems.get(i);
 			system.act(delta, systemLists.get(i), this);
@@ -85,17 +90,23 @@ public class Engine {
 	public void addEntity(Entity dummy) {
 		entities.add(dummy);
 	}
+	public void spawnEntity(Entity spawn) {
+		spawned.add(spawn);
+	}
 	public void removeEntity(Entity entity) {
 		removed.add(entity);
 	}
 	private void clearEntities() {
 		for (Entity entity : removed)
 			entities.remove(entity);
+		for (Entity entity : spawned)
+			entities.add(entity);
 		removed.clear();
+		spawned.clear();
 	}
 	public void handleMessage(Message message) {
 		for (MessageListener listener : getListeners(message.getClass()))
-			listener.accept(message);
+			listener.accept(message, this);
 	}
 	private LinkedList<MessageListener> getListeners(Class<? extends Message> messageType) {
 		if (!listeners.containsKey(messageType))
@@ -104,5 +115,12 @@ public class Engine {
 	}
 	public void addListener(Class<? extends Message> messageType, MessageListener listener) {
 		getListeners(messageType).add(listener);
+	}
+	public void triggerFailure(float i) {
+		failed = true;
+		failTimer = i;
+	}
+	public boolean failed() {
+		return failed && failTimer <= 0;
 	}
 }
