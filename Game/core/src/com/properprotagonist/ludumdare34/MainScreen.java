@@ -24,6 +24,7 @@ import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
 import com.properprotagonist.ludumdare34.ecs.rail.RailPosition;
 import com.properprotagonist.ludumdare34.ecs.rail.RailTargetCamera;
 import com.properprotagonist.ludumdare34.ecs.rail.RailVelocity;
+import com.properprotagonist.ludumdare34.ecs.rail.systems.RailCollisionSystem;
 import com.properprotagonist.ludumdare34.ecs.rail.systems.RailMovementSystem;
 import com.properprotagonist.ludumdare34.ecs.rail.systems.RailPositioningSystem;
 import com.properprotagonist.ludumdare34.ecs.rail.systems.RailScopeSystem;
@@ -44,15 +45,14 @@ public class MainScreen implements Screen {
 		// RAILS
 		engine.addComponentSystem(new RailMovementSystem());
 		engine.addComponentSystem(new RailPositioningSystem());
+		engine.addComponentSystem(new RailCollisionSystem(dummy));
 		engine.addComponentSystem(new SingleRailObstacleSystem());
 		engine.addComponentSystem(new RailScopeSystem(dummy));
 		// GRAVITY
-		engine.addComponentSystem(new FloorBounceSystem());
 		engine.addComponentSystem(new GravitySystem(5, -15));
 		engine.addComponentSystem(new GrowthSystem());
-		engine.addComponentSystem(new BouncinessSystem(6));
 		engine.addComponentSystem(new FloorBounceSystem());
-		
+		engine.addComponentSystem(new BouncinessSystem(6));
 		
 		engine.addRenderer(new DebugWeightRenderer());
 		engine.addRenderer(new DebugEntityRenderer());
@@ -71,7 +71,7 @@ public class MainScreen implements Screen {
 		dummy.setComponent(Weight.class, new Weight(2));
 		dummy.setComponent(FallingSpeed.class, new FallingSpeed());
 		dummy.setComponent(RailPosition.class, new RailPosition());
-		dummy.setComponent(RailObstacle.class, new RailObstacle(false, 0, 50));
+//		dummy.setComponent(RailObstacle.class, new RailObstacle(false, 0, 50));
 		dummy.setComponent(RailVelocity.class, new RailVelocity());
 		dummy.setComponent(WeightGrowth.class, new WeightGrowth(new GrowthDetector() {
 			@Override

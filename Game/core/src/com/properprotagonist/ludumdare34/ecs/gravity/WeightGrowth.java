@@ -10,9 +10,9 @@ public class WeightGrowth implements Component {
 	public float minWeight;
 	public WeightGrowth(GrowthDetector detector) {
 		this.detector = detector;
-		activeGrowth = 1;
-		passiveGrowth = -0.25f;
-		maxWeight = 5;
+		activeGrowth = 0.25f;
+		passiveGrowth = -1f;
+		maxWeight = 10;
 		minWeight = 1;
 	}
 	public float getCurrentGrowth() {
