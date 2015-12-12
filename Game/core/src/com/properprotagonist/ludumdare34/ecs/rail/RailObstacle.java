@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import com.badlogic.gdx.math.Vector2;
 import com.properprotagonist.ludumdare34.ecs.Component;
+import com.properprotagonist.ludumdare34.ecs.Entity;
 
 public class RailObstacle implements Component {
 	private float[] points;
@@ -14,10 +15,12 @@ public class RailObstacle implements Component {
 	}
 	public boolean collides(float start, float stop) {
 		boolean on = startOn;
+		float last = 0;
 		for (float p : points) {
-			if (on && start <= p && stop >= p)
+			if (on && stop > last && start < p)
 				return true;
 			on = !on;
+			last = p;
 		}
 		return false;
 	}
@@ -45,5 +48,12 @@ public class RailObstacle implements Component {
 		float height = points[1] - points[0];
 		points[0] = y;
 		points[1] = y + height;
+	}
+	public boolean collides(RailPosition rPos, Entity entity) {
+		float rX = rPos.getPosition();
+		if (entity.getBounding().x <= rX && entity.getBounding().x + entity.getBounding().width >= rX)
+			return collides(entity.getBounding().y, entity.getBounding().y + entity.getBounding().height);
+		else
+			return false;
 	}
 }

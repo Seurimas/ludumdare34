@@ -22,13 +22,15 @@ public class RailCollisionSystem implements ComponentSystem {
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
 		for (Entity entity : entities) {
 			RailObstacle obstacle = entity.getComponent(RailObstacle.class);
-			
+			RailPosition rPos = entity.getComponent(RailPosition.class);
+			if (obstacle.collides(rPos, target))
+				engine.handleMessage(new CollisionMessage(target, entity));
 		}
 	}
 
 	@Override
 	public Class<? extends Component>[] dependencies() {
-		return null;
+		return dependencies;
 	}
 	
 }
