@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.properprotagonist.ludumdare34.ecs.Component;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
+import com.properprotagonist.ludumdare34.ecs.blob.BlobRenderer.BlobSprite;
 import com.properprotagonist.ludumdare34.ecs.gravity.Weight;
-import com.properprotagonist.ludumdare34.ecs.render.BlobRenderer.BlobSprite;
 import com.properprotagonist.ludumdare34.ecs.RenderSystem;
 import com.properprotagonist.ludumdare34.utils.LDUtils;
 

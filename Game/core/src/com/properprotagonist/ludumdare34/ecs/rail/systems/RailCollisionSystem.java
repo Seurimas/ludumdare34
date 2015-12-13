@@ -6,7 +6,6 @@ import com.properprotagonist.ludumdare34.ecs.Engine;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
-import com.properprotagonist.ludumdare34.ecs.rail.RailPosition;
 import com.properprotagonist.ludumdare34.utils.LDUtils;
 
 public class RailCollisionSystem implements ComponentSystem {

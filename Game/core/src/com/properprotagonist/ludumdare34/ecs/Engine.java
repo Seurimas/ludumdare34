@@ -123,4 +123,7 @@ public class Engine {
 	public boolean failed() {
 		return failed && failTimer <= 0;
 	}
+	public boolean failing() {
+		return failed;
+	}
 }

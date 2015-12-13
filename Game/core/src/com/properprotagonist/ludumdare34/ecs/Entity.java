@@ -12,7 +12,7 @@ public class Entity {
 	public <C extends Component> C getComponent(Class<C> clazz) {
 		return (C) components.get(clazz);
 	}
-	public <C extends Component> void setComponent(Class<C> clazz, C component) {
+	public <C extends Component> void setComponent(Class<? extends C> clazz, C component) {
 		components.put(clazz, component);
 	}
 	public boolean hasComponents(Class<? extends Component>... checkFor) {

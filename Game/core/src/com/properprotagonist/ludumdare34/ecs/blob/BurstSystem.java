@@ -12,6 +12,7 @@ import com.properprotagonist.ludumdare34.ecs.gravity.FallingSpeed;
 
 public class BurstSystem implements ComponentSystem {
 	private Class<? extends Component>[] dependencies = new Class[] {
+			FallingSpeed.class,
 			Burst.class
 	};
 
@@ -19,9 +20,13 @@ public class BurstSystem implements ComponentSystem {
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
 		for (Entity entity : entities) {
 			Burst burst = entity.getComponent(Burst.class);
-			if (!burst.isActive() && Gdx.input.isKeyJustPressed(Keys.ENTER))
+			if (!burst.isActive() && Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+				FallingSpeed falling = entity.getComponent(FallingSpeed.class);
+				falling.vy = 0;
 				burst.start();
-			entity.move(burst.getModifier(), 0);
+			}
+			entity.move(burst.getModifier() * delta, 0);
+			burst.update(delta);
 		}
 	}
 

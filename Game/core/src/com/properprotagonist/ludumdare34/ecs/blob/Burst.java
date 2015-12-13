@@ -12,7 +12,10 @@ public class Burst implements Component {
 		this.burstProgress = burstDuration;
 	}
 	public boolean isActive() {
-		return burstProgress >= burstDuration;
+		return burstProgress < burstDuration;
+	}
+	public void start() {
+		burstProgress = 0;
 	}
 	public void update(float delta) {
 		burstProgress += delta;

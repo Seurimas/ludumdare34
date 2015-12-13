@@ -1,4 +1,4 @@
-package com.properprotagonist.ludumdare34.ecs.render;
+package com.properprotagonist.ludumdare34.ecs.blob;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -36,6 +36,11 @@ public class BlobRenderer implements RenderSystem {
 			int frame = (int) (weight.factor - 1);
 			if (frame > 4)
 				frame = 4;
+			if (entity.hasComponents(Burst.class)) {
+				Burst burst = entity.getComponent(Burst.class);
+				if (burst.isActive())
+					frame = 5;
+			}
 			batch.draw(entity.getComponent(BlobSprite.class).texture, 
 					bounds.x, bounds.y, bounds.width, bounds.height,
 					0, (frame + 1) / 8f,
