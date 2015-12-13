@@ -20,8 +20,8 @@ import com.properprotagonist.ludumdare34.utils.LDUtils;
 public class RailPowerupSpawner implements ComponentSystem {
 	private static final Class<? extends Component>[] dependencies = LDUtils.componentArray();
 	private final Entity target;
-	private float lastSpawnX = 0;
-	private float spawnDuration = 100;
+	private float lastSpawnX = 2000;
+	private float spawnDuration = 1000;
 	private float spawnBuffer = 1200;
 	private final Powerup[] powerups;
 	public RailPowerupSpawner(Entity target, Powerup... powerups) {

@@ -39,7 +39,6 @@ public class PowerupRenderer implements RenderSystem {
 							powerup.texture.getRegionWidth(), -powerup.texture.getRegionHeight() * 2);
 				else
 					batch.draw(powerup.texture, x, region.y, powerup.texture.getRegionWidth(), powerup.texture.getRegionHeight() * 2);
-				System.out.println(String.format("%d, %f", x, region.y));
 			}
 		}
 		batch.setColor(1, 1, 1, 1);

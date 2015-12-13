@@ -11,7 +11,7 @@ import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
 
 public class FloorSystem implements ComponentSystem {
 	public static final float FLOOR = 31;
-	public static final float CEILING = 569;
+	public static final float CEILING = 550;
 	private Class<? extends Component>[] dependencies = new Class[] {
 			FallingSpeed.class
 	};

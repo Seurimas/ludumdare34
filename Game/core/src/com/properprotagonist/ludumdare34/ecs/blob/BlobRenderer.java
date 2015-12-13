@@ -9,6 +9,8 @@ import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.RenderSystem;
 import com.properprotagonist.ludumdare34.ecs.gravity.Weight;
+import com.properprotagonist.ludumdare34.ecs.powerups.Powerups.AntiGrav;
+import com.properprotagonist.ludumdare34.ecs.powerups.Powerups.Invulnerable;
 import com.properprotagonist.ludumdare34.utils.LDUtils;
 
 public class BlobRenderer implements RenderSystem {
@@ -41,10 +43,24 @@ public class BlobRenderer implements RenderSystem {
 				if (burst.isActive())
 					frame = 5;
 			}
+			if (entity.hasComponents(Invulnerable.class))
+				batch.setColor(1, 1, 1, 0.5f);
+			float v1;
+			float v2;
+			if (entity.hasComponents(AntiGrav.class)) {
+				v1 = frame / 8f;
+				v2 = (frame + 1) / 8f;
+				frame = Math.max(1, frame);
+			} else {
+				v1 = (frame + 1) / 8f;
+				v2 = frame / 8f;
+			}
 			batch.draw(entity.getComponent(BlobSprite.class).texture, 
 					bounds.x, bounds.y, bounds.width, bounds.height,
-					0, (frame + 1) / 8f,
-					1, frame / 8f);
+					0, v1,
+					1, v2);
+			if (entity.hasComponents(Invulnerable.class))
+				batch.setColor(1, 1, 1, 1);
 		}
 	}
 

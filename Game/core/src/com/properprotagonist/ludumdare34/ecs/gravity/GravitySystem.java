@@ -6,6 +6,7 @@ import com.properprotagonist.ludumdare34.ecs.Component;
 import com.properprotagonist.ludumdare34.ecs.ComponentSystem;
 import com.properprotagonist.ludumdare34.ecs.Engine;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
+import com.properprotagonist.ludumdare34.ecs.powerups.Powerups.AntiGrav;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 
 public class GravitySystem implements ComponentSystem {
@@ -28,8 +29,13 @@ public class GravitySystem implements ComponentSystem {
 		for (Entity entity : entities) {
 			Weight entityWeight = entity.getComponent(Weight.class);
 			FallingSpeed velocity = entity.getComponent(FallingSpeed.class);
-			velocity.vy -= entityWeight.factor * delta * G;
-			velocity.vy = Math.max(velocity.vy, MAX_FALL_SPEED);
+			if (entity.hasComponents(AntiGrav.class)) {
+				velocity.vy += entityWeight.factor * delta * G;
+				velocity.vy = Math.min(velocity.vy, -MAX_FALL_SPEED);
+			} else {
+				velocity.vy -= entityWeight.factor * delta * G;
+				velocity.vy = Math.max(velocity.vy, MAX_FALL_SPEED);
+			}
 			entity.getBounding().y += velocity.vy;
 		}
 	}

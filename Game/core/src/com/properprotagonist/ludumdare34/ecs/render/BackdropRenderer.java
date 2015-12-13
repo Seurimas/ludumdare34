@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.properprotagonist.ludumdare34.LudumDare34;
 import com.properprotagonist.ludumdare34.ecs.Component;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
+import com.properprotagonist.ludumdare34.ecs.bounce.FloorSystem;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.RenderSystem;
 
@@ -31,8 +32,8 @@ public class BackdropRenderer implements RenderSystem {
 			ComponentEntityList componentEntityList) {
 		float left = (int)(target.getBounding().x) / 128 * 128 - 128;
 		for (int x = 0;x < LudumDare34.SCREEN_WIDTH + 256;x+= 32) {
-			batch.draw(floor, x + left, 0);
-			batch.draw(ceiling, x + left, LudumDare34.SCREEN_HEIGHT - 32);
+			batch.draw(floor, x + left, FloorSystem.FLOOR - 32);
+			batch.draw(ceiling, x + left, FloorSystem.CEILING);
 		}
 	}
 

@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
@@ -33,6 +34,7 @@ import com.properprotagonist.ludumdare34.ecs.gravity.GrowthSystem;
 import com.properprotagonist.ludumdare34.ecs.gravity.Weight;
 import com.properprotagonist.ludumdare34.ecs.gravity.WeightGrowth;
 import com.properprotagonist.ludumdare34.ecs.powerups.PowerupRenderer;
+import com.properprotagonist.ludumdare34.ecs.powerups.PowerupSystem;
 import com.properprotagonist.ludumdare34.ecs.powerups.Powerups;
 import com.properprotagonist.ludumdare34.ecs.powerups.RailPowerupSpawner;
 import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
@@ -48,6 +50,7 @@ import com.properprotagonist.ludumdare34.ecs.render.Extended9PatchRenderer;
 import com.properprotagonist.ludumdare34.ecs.render.Extended9PatchRenderer.Extended9Patch;
 import com.properprotagonist.ludumdare34.ecs.render.SimpleSpriteRenderer;
 import com.properprotagonist.ludumdare34.ecs.render.SimpleSpriteRenderer.SimpleSprite;
+import com.properprotagonist.ludumdare34.ecs.toast.QuoteSystem;
 
 public class MainScreen implements Screen {
 	LudumDare34 game;
@@ -73,17 +76,20 @@ public class MainScreen implements Screen {
 		engine.addComponentSystem(new FloorSystem(player, game.assets.get("bounce.wav", Sound.class)));
 		engine.addComponentSystem(new BouncinessSystem(6));
 		// DANGER
-		engine.addListener(CollisionMessage.class, new PoppedBlobListener());
+		engine.addListener(CollisionMessage.class, new PoppedBlobListener(game.assets.get("pop.wav", Sound.class)));
 		engine.addComponentSystem(new RailObstacleSpawner(player, (Texture) game.assets.get("Obstacles.png")));
 		// BLOB
 		engine.addComponentSystem(new BurstSystem());
 		engine.addComponentSystem(new RailPowerupSpawner(player, Powerups.powerups));
+		engine.addComponentSystem(new PowerupSystem(player));
 		Powerups.initialize(game.assets.get("FloorAndCeiling.png", Texture.class));
 		Powerups.setup(engine, player);
 		
 //		engine.addRenderer(new DebugWeightRenderer());
 //		engine.addRenderer(new DebugEntityRenderer());
-		engine.addRenderer(new DistanceRenderer(player));
+		BitmapFont font = game.assets.get("impact.fnt", BitmapFont.class);
+		engine.addRenderer(new QuoteSystem(font));
+		engine.addRenderer(new DistanceRenderer(player, font, game.uiBatch));
 		engine.addRenderer(new SimpleSpriteRenderer());
 		engine.addRenderer(new Extended9PatchRenderer());
 		engine.addRenderer(new PowerupRenderer());

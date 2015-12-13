@@ -24,6 +24,8 @@ public class  PowerupTrackerSystem<T extends PowerupComponent> implements Compon
 		if (player.hasComponents(clazz)) {
 			T powerup = player.getComponent(clazz);
 			powerup.update(delta);
+			if (powerup.isComplete())
+				player.removeComponent(clazz);
 		}
 	}
 

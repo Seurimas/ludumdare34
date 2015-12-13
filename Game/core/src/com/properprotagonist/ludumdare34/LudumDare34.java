@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
@@ -16,6 +17,7 @@ public class LudumDare34 extends Game {
 	public static final float SCREEN_WIDTH = 800;
 	AssetManager assets = new AssetManager();
 	public SpriteBatch batch;
+	public SpriteBatch uiBatch;
 	public ShapeRenderer shapes;
 	@Override
 	public void create () {
@@ -27,7 +29,9 @@ public class LudumDare34 extends Game {
 		assets.load("bounce.wav", Sound.class);
 		assets.load("pop.wav", Sound.class);
 		assets.load("lose.wav", Sound.class);
+		assets.load("impact.fnt", BitmapFont.class);
 		batch = new SpriteBatch();
+		uiBatch = new SpriteBatch();
 		shapes = new ShapeRenderer();
 		loading();
 	}

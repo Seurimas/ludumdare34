@@ -56,7 +56,7 @@ public class RailObstacleSpawner implements ComponentSystem {
 		return dependencies;
 	}
 	private Entity getNewObstacle(Engine engine, float x) {
-		Rectangle bounds = new Rectangle(x + spawnBuffer, MathUtils.random(0, 600 - 128), 32, 128);
+		Rectangle bounds = new Rectangle(x + spawnBuffer, MathUtils.random(0, 600 - 128), 32, (MathUtils.random(2) + 2) * 32);
 		Entity obs = new Entity(bounds);
 		if (MathUtils.randomBoolean(0.25f)) {
 			float t = bounds.width;

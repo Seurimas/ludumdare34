@@ -8,5 +8,5 @@ import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
 
 public interface RenderSystem {
 	Class<? extends Component>[] dependencies();
-	void draw(Batch batch, ShapeRenderer shapes, ComponentEntityList componentEntityList);
+	void draw(Batch batch, ShapeRenderer shapes, ComponentEntityList entities);
 }

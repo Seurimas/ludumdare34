@@ -6,6 +6,7 @@ import com.properprotagonist.ludumdare34.ecs.Engine;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
 import com.properprotagonist.ludumdare34.ecs.powerups.Powerups.Invulnerable;
 import com.properprotagonist.ludumdare34.ecs.rail.systems.CollisionMessage;
+import com.properprotagonist.ludumdare34.ecs.toast.QuoteSystem;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.Message;
 import com.properprotagonist.ludumdare34.ecs.MessageListener;
@@ -26,9 +27,13 @@ public class PowerupSystem implements ComponentSystem, MessageListener {
 			}
 		}
 	}
-
+	Engine engine = null;
 	@Override
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
+		if (this.engine == null) {
+			this.engine = engine;
+			engine.addListener(CollisionMessage.class, this);
+		}
 	}
 
 	@Override

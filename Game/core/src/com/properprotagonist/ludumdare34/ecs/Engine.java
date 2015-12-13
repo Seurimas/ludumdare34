@@ -11,6 +11,18 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.properprotagonist.ludumdare34.ecs.rail.systems.CollisionMessage;
 
 public class Engine {
+	public static class DespawnMessage extends Message {
+		public final Entity despawned;
+		public DespawnMessage(Entity despawned) {
+			this.despawned = despawned;
+		}
+	}
+	public static class SpawnMessage extends Message {
+		public final Entity spawned;
+		public SpawnMessage(Entity spawned) {
+			this.spawned = spawned;
+		}
+	}
 	
 	public class ComponentEntityList implements Iterable<Entity> {
 		private final Class<? extends Component>[] components;
@@ -92,9 +104,11 @@ public class Engine {
 	}
 	public void spawnEntity(Entity spawn) {
 		spawned.add(spawn);
+		handleMessage(new SpawnMessage(spawn));
 	}
 	public void removeEntity(Entity entity) {
 		removed.add(entity);
+		handleMessage(new DespawnMessage(entity));
 	}
 	private void clearEntities() {
 		for (Entity entity : removed)
