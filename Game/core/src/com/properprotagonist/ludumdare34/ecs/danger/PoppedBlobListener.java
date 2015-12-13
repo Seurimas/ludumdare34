@@ -47,7 +47,7 @@ public class PoppedBlobListener implements MessageListener {
 			popped.play(0.75f);
 			engine.triggerFailure(1);
 			for (int i = 0;i < 5;i++) {
-				engine.spawnEntity(bits.getBlobBit(target));
+				engine.spawnEntity(bits.getBlobBit(target, -1));
 			}
 			target.getComponent(RailVelocity.class).stop();
 			target.removeComponent(Burst.class);

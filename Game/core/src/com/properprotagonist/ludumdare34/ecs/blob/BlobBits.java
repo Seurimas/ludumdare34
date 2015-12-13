@@ -9,6 +9,7 @@ import com.properprotagonist.ludumdare34.ecs.Engine;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.Message;
 import com.properprotagonist.ludumdare34.ecs.MessageListener;
+import com.properprotagonist.ludumdare34.ecs.bounce.BounceMessage;
 import com.properprotagonist.ludumdare34.ecs.bounce.BouncinessComponent;
 import com.properprotagonist.ludumdare34.ecs.danger.DangerousObstacle;
 import com.properprotagonist.ludumdare34.ecs.gravity.FallingSpeed;
@@ -27,24 +28,23 @@ public class BlobBits implements MessageListener {
 	public BlobBits(Texture texture) {
 		this.texture = texture;
 	}
-	public Entity getBlobBit(Entity target) {
+	public Entity getBlobBit(Entity target, int size) {
 		Rectangle bounds = new Rectangle(target.getBounding().x, target.getBounding().y, 0, 0);
 		TextureRegion texture;
 		bounds.x += MathUtils.random(-8, 8);
 		bounds.y += MathUtils.random(-8, 8);
-		if (MathUtils.randomBoolean()) {
+		if (size != -1) {
+			bounds.height = bounds.width = size;
+		} else if (MathUtils.randomBoolean()) {
 			bounds.height = bounds.width = 11;
-			texture = new TextureRegion(this.texture, 0, 96, 11, 11);
 		} else if (MathUtils.randomBoolean()) {
 			bounds.height = bounds.width = 9;
-			texture = new TextureRegion(this.texture, 11, 96, 9, 9);
 		} else if (MathUtils.randomBoolean()) {
 			bounds.height = bounds.width = 7;
-			texture = new TextureRegion(this.texture, 20, 96, 7, 7);
 		} else {
 			bounds.height = bounds.width = 5;
-			texture = new TextureRegion(this.texture, 27, 96, 5, 5);
 		}
+		texture = getTexture(bounds.height);
 		Entity entity = new Entity(bounds);
 		entity.setComponent(SimpleSprite.class, new SimpleSprite(texture));
 		entity.setComponent(FallingSpeed.class, new FallingSpeed());
@@ -58,6 +58,16 @@ public class BlobBits implements MessageListener {
 		return entity;
 	}
 
+	private TextureRegion getTexture(float height) {
+		if (height == 11)
+			return new TextureRegion(this.texture, 0, 96, 11, 11);
+		else if (height == 9)
+			return new TextureRegion(this.texture, 11, 96, 9, 9);
+		else if (height == 7)
+			return new TextureRegion(this.texture, 20, 96, 7, 7);
+		else
+			return new TextureRegion(this.texture, 27, 96, 5, 5);
+	}
 	private void stopBit(Entity target, Entity obstacle) {
 		Rectangle targetBounds = target.getBounding();
 		Rectangle obsBounds = obstacle.getBounding();
@@ -72,6 +82,10 @@ public class BlobBits implements MessageListener {
 			CollisionMessage collision = (CollisionMessage) message;
 			if (collision.target.hasComponents(PoppedBit.class))
 				stopBit(collision.target, collision.obstacle);
+		} else if (message instanceof BounceMessage) {
+			BounceMessage bounce = (BounceMessage) message;
+			if (bounce.bouncer.hasComponents(BlobComponent.class))
+				engine.spawnEntity(getBlobBit(bounce.bouncer, bounce.speed > 10 ? 5 : 3));
 		}
 	}
 }

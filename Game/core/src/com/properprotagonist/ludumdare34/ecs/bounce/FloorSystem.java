@@ -27,16 +27,21 @@ public class FloorSystem implements ComponentSystem {
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
 		for (Entity entity : entities) {
 			FallingSpeed falling = entity.getComponent(FallingSpeed.class);
+			boolean bounced = false;
 			if (entity.getBounding().y <= FLOOR && falling.vy < 0)
-				bounce(entity, falling, true);
+				bounced = bounce(entity, falling, true);
 			else if (entity.getBounding().y + entity.getBounding().height >= CEILING && falling.vy > 0)
-				bounce(entity, falling, false);
+				bounced = bounce(entity, falling, false);
+			if (bounced) {
+				engine.handleMessage(new BounceMessage(entity, falling.vy));
+			}
 		}
 	}
 
-	private void bounce(Entity entity, FallingSpeed falling, boolean floor) {
+	private boolean bounce(Entity entity, FallingSpeed falling, boolean floor) {
 		if (entity.hasComponents(BounceComponent.class))
-			return;
+			return false;
+		boolean bounced = false;
 		if (entity.hasComponents(BouncinessComponent.class)) {
 			BouncinessComponent bounciness = entity.getComponent(BouncinessComponent.class);
 			BounceComponent bounce = new BounceComponent(falling.vy, bounciness);
@@ -47,11 +52,13 @@ public class FloorSystem implements ComponentSystem {
 				sound.play(0.25f, 1f, -1);
 			else
 				sound.play(0.5f, 1.25f, 1);
+			bounced = true;
 		}
 		if (floor)
 			entity.getBounding().y = FLOOR;
 		else
 			entity.getBounding().y = CEILING - entity.getBounding().height;
+		return bounced;
 	}
 
 	@Override

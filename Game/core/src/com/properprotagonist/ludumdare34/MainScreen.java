@@ -23,6 +23,7 @@ import com.properprotagonist.ludumdare34.ecs.blob.BlobRenderer;
 import com.properprotagonist.ludumdare34.ecs.blob.Burst;
 import com.properprotagonist.ludumdare34.ecs.blob.BurstSystem;
 import com.properprotagonist.ludumdare34.ecs.blob.BlobRenderer.BlobSprite;
+import com.properprotagonist.ludumdare34.ecs.bounce.BounceMessage;
 import com.properprotagonist.ludumdare34.ecs.bounce.BouncinessComponent;
 import com.properprotagonist.ludumdare34.ecs.bounce.BouncinessSystem;
 import com.properprotagonist.ludumdare34.ecs.bounce.FloorSystem;
@@ -72,36 +73,46 @@ public class MainScreen implements Screen {
 		engine.addComponentSystem(new RailMovementSystem());
 		engine.addComponentSystem(new CollisionSystem());
 		// GRAVITY
-		engine.addComponentSystem(new GravitySystem(5, -15));
-		engine.addComponentSystem(new GrowthSystem());
-		engine.addComponentSystem(new FloorSystem(game.assets.get("bounce.wav", Sound.class)));
-		engine.addComponentSystem(new BouncinessSystem(6));
+		Sound bounce = game.assets.get("bounce.wav", Sound.class);
+		setupGravity(bounce);
 		// DANGER
 		BlobBits bits = new BlobBits(game.assets.get("FloorAndCeiling.png", Texture.class));
 		engine.addListener(CollisionMessage.class, new PoppedBlobListener(game.assets.get("pop.wav", Sound.class),
 				bits));
 		engine.addListener(CollisionMessage.class, bits);
+		engine.addListener(BounceMessage.class, bits);
 		
 		// BLOB
+		Texture obstacles = game.assets.get("Obstacles.png");
+		Texture environment = game.assets.get("FloorAndCeiling.png", Texture.class);
 		engine.addComponentSystem(new BurstSystem());
-		engine.addComponentSystem(new RailPowerupSpawner(player, Powerups.powerups));
-		engine.addComponentSystem(new RailObstacleSpawner(player, (Texture) game.assets.get("Obstacles.png")));
-		engine.addRenderer(new RailTargetCamera(player, camera));
-		engine.addComponentSystem(new RailScopeSystem(player));
-		engine.addComponentSystem(new PowerupSystem(player));
-		Powerups.initialize(game.assets.get("FloorAndCeiling.png", Texture.class));
-		Powerups.setup(engine, player);
+		setupBasicGame(obstacles, environment);
 		
 //		engine.addRenderer(new DebugWeightRenderer());
 //		engine.addRenderer(new DebugEntityRenderer());
 		BitmapFont font = game.assets.get("impact.fnt", BitmapFont.class);
-		engine.addRenderer(new BackdropRenderer(game.assets.get("FloorAndCeiling.png", Texture.class), player));
+		engine.addRenderer(new BackdropRenderer(environment, player));
 		engine.addRenderer(new QuoteSystem(font));
 		engine.addRenderer(new DistanceRenderer(player, font, game.uiBatch));
 		engine.addRenderer(new Extended9PatchRenderer());
 		engine.addRenderer(new SimpleSpriteRenderer());
 		engine.addRenderer(new PowerupRenderer());
 		engine.addRenderer(new BlobRenderer());
+	}
+	private void setupBasicGame(Texture obstacles, Texture environment) {
+		engine.addComponentSystem(new RailPowerupSpawner(player, Powerups.powerups));
+		engine.addComponentSystem(new RailObstacleSpawner(player, obstacles));
+		engine.addRenderer(new RailTargetCamera(player, camera));
+		engine.addComponentSystem(new RailScopeSystem(player));
+		engine.addComponentSystem(new PowerupSystem(player));
+		Powerups.initialize(environment);
+		Powerups.setup(engine, player);
+	}
+	private void setupGravity(Sound bounce) {
+		engine.addComponentSystem(new GravitySystem(5, -15));
+		engine.addComponentSystem(new GrowthSystem());
+		engine.addComponentSystem(new FloorSystem(bounce));
+		engine.addComponentSystem(new BouncinessSystem(6));
 	}
 	private void createPlayer() {
 		player = new Entity(new Rectangle(0, 100, 32, 32));
