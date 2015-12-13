@@ -12,7 +12,7 @@ import com.properprotagonist.ludumdare34.ecs.bounce.BouncinessComponent;
 import com.properprotagonist.ludumdare34.ecs.bounce.FloorSystem;
 import com.properprotagonist.ludumdare34.ecs.gravity.FallingSpeed;
 import com.properprotagonist.ludumdare34.ecs.gravity.Weight;
-import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
+import com.properprotagonist.ludumdare34.ecs.rail.Obstacle;
 import com.properprotagonist.ludumdare34.ecs.render.Extended9PatchRenderer.Extended9Patch;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.utils.LDUtils;
@@ -78,7 +78,7 @@ public class RailObstacleSpawner implements ComponentSystem {
 		if (x > 4000 && MathUtils.randomBoolean(0.5f)) {
 			bounds.height += 32;
 		}
-		obs.setComponent(RailObstacle.class, new RailObstacle());
+		obs.setComponent(Obstacle.class, new Obstacle());
 		obs.setComponent(DangerousObstacle.class, new DangerousObstacle());
 		obs.setComponent(Extended9Patch.class, getRandomTexture());
 		return obs;

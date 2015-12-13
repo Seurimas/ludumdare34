@@ -1,9 +1,11 @@
 package com.properprotagonist.ludumdare34.ecs.render;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.math.Vector3;
 import com.properprotagonist.ludumdare34.LudumDare34;
 import com.properprotagonist.ludumdare34.ecs.Component;
@@ -35,6 +37,14 @@ public class BackdropRenderer implements RenderSystem {
 			batch.draw(floor, x + left, FloorSystem.FLOOR - 32);
 			batch.draw(ceiling, x + left, FloorSystem.CEILING);
 		}
+		batch.end();
+		shapes.begin(ShapeType.Filled);
+		Color begin = new Color(0.25f, 0.25f, 0, 0.25f);
+		Color end = new Color(0.25f, 0.125f, 0, 0.25f);
+		shapes.rect(left, FloorSystem.FLOOR, LudumDare34.SCREEN_WIDTH + 256, FloorSystem.CEILING - FloorSystem.FLOOR, 
+				begin, end, end, begin);
+		shapes.end();
+		batch.begin();
 	}
 
 }

@@ -12,7 +12,7 @@ import com.properprotagonist.ludumdare34.ecs.bounce.BouncinessComponent;
 import com.properprotagonist.ludumdare34.ecs.bounce.FloorSystem;
 import com.properprotagonist.ludumdare34.ecs.gravity.FallingSpeed;
 import com.properprotagonist.ludumdare34.ecs.gravity.Weight;
-import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
+import com.properprotagonist.ludumdare34.ecs.rail.Obstacle;
 import com.properprotagonist.ludumdare34.ecs.render.Extended9PatchRenderer.Extended9Patch;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.utils.LDUtils;
@@ -61,7 +61,7 @@ public class RailPowerupSpawner implements ComponentSystem {
 		if (MathUtils.randomBoolean(0.5f)) {
 			bounds.y = FloorSystem.CEILING - bounds.height;
 		}
-		obs.setComponent(RailObstacle.class, new RailObstacle());
+		obs.setComponent(Obstacle.class, new Obstacle());
 		obs.setComponent(Powerup.class, getRandomPowerup());
 		return obs;
 	}

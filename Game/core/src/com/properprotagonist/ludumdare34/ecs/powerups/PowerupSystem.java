@@ -4,6 +4,7 @@ import com.properprotagonist.ludumdare34.ecs.Component;
 import com.properprotagonist.ludumdare34.ecs.ComponentSystem;
 import com.properprotagonist.ludumdare34.ecs.Engine;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
+import com.properprotagonist.ludumdare34.ecs.blob.BlobComponent;
 import com.properprotagonist.ludumdare34.ecs.powerups.Powerups.Invulnerable;
 import com.properprotagonist.ludumdare34.ecs.rail.systems.CollisionMessage;
 import com.properprotagonist.ludumdare34.ecs.toast.QuoteSystem;
@@ -21,7 +22,7 @@ public class PowerupSystem implements ComponentSystem, MessageListener {
 	public void accept(Message message, Engine engine) {
 		if (message instanceof CollisionMessage) {
 			CollisionMessage collision = (CollisionMessage) message;
-			if (collision.obstacle.hasComponents(Powerup.class)) {
+			if (collision.obstacle.hasComponents(Powerup.class) && collision.target.hasComponents(BlobComponent.class)) {
 				collision.obstacle.getComponent(Powerup.class).applyToPlayer(player);
 				collision.obstacle.removeComponent(Powerup.class);
 			}

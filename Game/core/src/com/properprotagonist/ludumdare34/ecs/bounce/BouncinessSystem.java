@@ -6,7 +6,7 @@ import com.properprotagonist.ludumdare34.ecs.Engine;
 import com.properprotagonist.ludumdare34.ecs.Entity;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
 import com.properprotagonist.ludumdare34.ecs.gravity.FallingSpeed;
-import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
+import com.properprotagonist.ludumdare34.ecs.rail.Obstacle;
 
 public class BouncinessSystem implements ComponentSystem {
 	private final float minimumBounce;

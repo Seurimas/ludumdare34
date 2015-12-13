@@ -6,8 +6,11 @@ import com.properprotagonist.ludumdare34.ecs.ComponentSystem;
 import com.properprotagonist.ludumdare34.ecs.Engine;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
 import com.properprotagonist.ludumdare34.ecs.Entity;
+import com.properprotagonist.ludumdare34.ecs.blob.BlobBits;
+import com.properprotagonist.ludumdare34.ecs.blob.BlobComponent;
+import com.properprotagonist.ludumdare34.ecs.blob.BlobBits.PoppedBit;
 import com.properprotagonist.ludumdare34.ecs.gravity.FallingSpeed;
-import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
+import com.properprotagonist.ludumdare34.ecs.rail.Obstacle;
 
 public class FloorSystem implements ComponentSystem {
 	public static final float FLOOR = 31;
@@ -15,10 +18,8 @@ public class FloorSystem implements ComponentSystem {
 	private Class<? extends Component>[] dependencies = new Class[] {
 			FallingSpeed.class
 	};
-	private final Entity player;
 	private final Sound sound;
-	public FloorSystem(Entity dummy, Sound sound) {
-		player = dummy;
+	public FloorSystem(Sound sound) {
 		this.sound = sound;
 	}
 
@@ -40,8 +41,10 @@ public class FloorSystem implements ComponentSystem {
 			BouncinessComponent bounciness = entity.getComponent(BouncinessComponent.class);
 			BounceComponent bounce = new BounceComponent(falling.vy, bounciness);
 			entity.setComponent(BounceComponent.class, bounce);
-			if (entity == player)
+			if (entity.hasComponents(BlobComponent.class))
 				sound.play(1, 1f, -1);
+			else if (entity.hasComponents(PoppedBit.class))
+				sound.play(0.25f, 1f, -1);
 			else
 				sound.play(0.5f, 1.25f, 1);
 		}

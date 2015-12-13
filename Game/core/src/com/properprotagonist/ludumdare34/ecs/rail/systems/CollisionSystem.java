@@ -5,22 +5,25 @@ import com.properprotagonist.ludumdare34.ecs.ComponentSystem;
 import com.properprotagonist.ludumdare34.ecs.Engine;
 import com.properprotagonist.ludumdare34.ecs.Engine.ComponentEntityList;
 import com.properprotagonist.ludumdare34.ecs.Entity;
-import com.properprotagonist.ludumdare34.ecs.rail.RailObstacle;
+import com.properprotagonist.ludumdare34.ecs.rail.Collider;
+import com.properprotagonist.ludumdare34.ecs.rail.Obstacle;
 import com.properprotagonist.ludumdare34.utils.LDUtils;
 
-public class RailCollisionSystem implements ComponentSystem {
-	private static final Class<? extends Component>[] dependencies = LDUtils.componentArray(
-			RailObstacle.class
-			);
-	private final Entity target;
-	public RailCollisionSystem(Entity target) {
-		this.target = target;
+public class CollisionSystem implements ComponentSystem {
+	private static final Class<? extends Component>[] dependencies = LDUtils.componentArray();
+	public CollisionSystem() {
 	}
 	@Override
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
-		for (Entity entity : entities) {
-			if (entity.collides(target))
-				engine.handleMessage(new CollisionMessage(target, entity));
+		for (Entity collider : entities) {
+			if (!collider.hasComponents(Collider.class))
+				continue;
+			for (Entity entity : entities) {
+				if (!entity.hasComponents(Obstacle.class))
+					continue;
+				if (entity.collides(collider))
+					engine.handleMessage(new CollisionMessage(collider, entity));
+			}
 		}
 	}
 

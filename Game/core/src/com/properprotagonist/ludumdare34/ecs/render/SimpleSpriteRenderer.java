@@ -2,6 +2,7 @@ package com.properprotagonist.ludumdare34.ecs.render;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Rectangle;
 import com.properprotagonist.ludumdare34.ecs.Component;
@@ -12,8 +13,8 @@ import com.properprotagonist.ludumdare34.utils.LDUtils;
 
 public class SimpleSpriteRenderer implements RenderSystem {
 	public static class SimpleSprite implements Component {
-		Texture texture;
-		public SimpleSprite(Texture texture) {
+		TextureRegion texture;
+		public SimpleSprite(TextureRegion texture) {
 			this.texture = texture;
 		}
 	}

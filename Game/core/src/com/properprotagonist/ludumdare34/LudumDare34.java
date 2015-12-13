@@ -24,6 +24,7 @@ public class LudumDare34 extends Game {
 		assets.load("BlobBurst.png", Texture.class);
 		assets.load("BlobFull.png", Texture.class);
 		assets.load("FloorAndCeiling.png", Texture.class);
+		assets.load("Background.png", Texture.class);
 		assets.load("Obstacles.png", Texture.class);
 		assets.load("main_theme.wav", Music.class);
 		assets.load("bounce.wav", Sound.class);
