@@ -1,5 +1,6 @@
 package com.properprotagonist.ludumdare34.ecs.render;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -16,6 +17,7 @@ public class Extended9PatchRenderer implements RenderSystem {
 	public static class Extended9Patch implements Component {
 		private final Texture texture;
 		private final int[] points;
+		private Color color = Color.WHITE;
 		public Extended9Patch(Texture texture, int... points) {
 			this.texture = texture;
 			this.points = points;
@@ -106,6 +108,9 @@ public class Extended9PatchRenderer implements RenderSystem {
 				}
 			}
 		}
+		public void setColor(Color green) {
+			color = green;
+		}
 	}
 	private static final Class<? extends Component>[] dependencies = LDUtils.componentArray(
 			Extended9Patch.class
@@ -120,8 +125,10 @@ public class Extended9PatchRenderer implements RenderSystem {
 			ComponentEntityList componentEntityList) {
 		for (Entity entity : componentEntityList) {
 			Extended9Patch patch = entity.getComponent(Extended9Patch.class);
+			batch.setColor(patch.color);
 			patch.draw(batch, entity.getBounding());
 		}
+		batch.setColor(Color.WHITE);
 	}
 
 }

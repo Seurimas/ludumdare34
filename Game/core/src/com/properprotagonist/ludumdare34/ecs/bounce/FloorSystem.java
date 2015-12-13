@@ -1,6 +1,7 @@
 package com.properprotagonist.ludumdare34.ecs.bounce;
 
 import com.badlogic.gdx.audio.Sound;
+import com.properprotagonist.ludumdare34.ShakeCameraSystem;
 import com.properprotagonist.ludumdare34.ecs.Component;
 import com.properprotagonist.ludumdare34.ecs.ComponentSystem;
 import com.properprotagonist.ludumdare34.ecs.Engine;
@@ -27,13 +28,16 @@ public class FloorSystem implements ComponentSystem {
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
 		for (Entity entity : entities) {
 			FallingSpeed falling = entity.getComponent(FallingSpeed.class);
+			float speed = falling.vy;
 			boolean bounced = false;
-			if (entity.getBounding().y <= FLOOR && falling.vy < 0)
+			if (entity.getBounding().y <= FLOOR && speed < 0)
 				bounced = bounce(entity, falling, true);
-			else if (entity.getBounding().y + entity.getBounding().height >= CEILING && falling.vy > 0)
+			else if (entity.getBounding().y + entity.getBounding().height >= CEILING && speed > 0)
 				bounced = bounce(entity, falling, false);
 			if (bounced) {
-				engine.handleMessage(new BounceMessage(entity, falling.vy));
+				engine.handleMessage(new BounceMessage(entity, speed));
+//				if (entity.hasComponents(BlobComponent.class) && Math.abs(speed) > 7)
+//					engine.handleMessage(new ShakeCameraSystem.ShakeMessage(0.25f, speed / 2));
 			}
 		}
 	}
@@ -49,7 +53,7 @@ public class FloorSystem implements ComponentSystem {
 			if (entity.hasComponents(BlobComponent.class))
 				sound.play(1, 1f, -1);
 			else if (entity.hasComponents(PoppedBit.class))
-				sound.play(0.25f, 1f, -1);
+				sound.play(0.5f * entity.getBounding().height / 11, 1f, -1);
 			else
 				sound.play(0.5f, 1.25f, 1);
 			bounced = true;

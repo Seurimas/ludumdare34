@@ -18,10 +18,12 @@ public class BackdropRenderer implements RenderSystem {
 	private final TextureRegion floor;
 	private final TextureRegion ceiling;
 	private final Entity target;
-	public BackdropRenderer(Texture texture3Piece, Entity target) {
+	private final boolean rail;
+	public BackdropRenderer(Texture texture3Piece, Entity target, boolean rail) {
 		ceiling = new TextureRegion(texture3Piece, 0, 0, 32, 32);
 		floor = new TextureRegion(texture3Piece, 0, 64, 32, 32);
 		this.target = target;
+		this.rail = rail;
 	}
 	Vector3 currentLeft = new Vector3();
 	@Override
@@ -33,6 +35,8 @@ public class BackdropRenderer implements RenderSystem {
 	public void draw(Batch batch, ShapeRenderer shapes,
 			ComponentEntityList componentEntityList) {
 		float left = (int)(target.getBounding().x) / 128 * 128 - 128;
+		if (!rail)
+			left = 0;
 		for (int x = 0;x < LudumDare34.SCREEN_WIDTH + 256;x+= 32) {
 			batch.draw(floor, x + left, FloorSystem.FLOOR - 32);
 			batch.draw(ceiling, x + left, FloorSystem.CEILING);
@@ -41,7 +45,7 @@ public class BackdropRenderer implements RenderSystem {
 		shapes.begin(ShapeType.Filled);
 		Color begin = new Color(0.25f, 0.25f, 0, 0.25f);
 		Color end = new Color(0.25f, 0.125f, 0, 0.25f);
-		shapes.rect(left, FloorSystem.FLOOR, LudumDare34.SCREEN_WIDTH + 256, FloorSystem.CEILING - FloorSystem.FLOOR, 
+		shapes.rect(left, FloorSystem.FLOOR - 1, LudumDare34.SCREEN_WIDTH + 256, FloorSystem.CEILING - FloorSystem.FLOOR + 1, 
 				begin, end, end, begin);
 		shapes.end();
 		batch.begin();

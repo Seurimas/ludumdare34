@@ -1,4 +1,4 @@
-package com.properprotagonist.ludumdare34.ecs.danger;
+package com.properprotagonist.ludumdare34.ecs.menu;
 
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,36 +24,15 @@ import com.properprotagonist.ludumdare34.ecs.rail.systems.CollisionMessage;
 import com.properprotagonist.ludumdare34.ecs.render.SimpleSpriteRenderer.SimpleSprite;
 import com.properprotagonist.ludumdare34.utils.LDUtils;
 
-public class PoppedBlobListener implements MessageListener {
-	private final Sound popped;
-	private final BlobBits bits;
-	public PoppedBlobListener(Sound popped, BlobBits blobBits) {
-		this.popped = popped;
-		this.bits = blobBits;
+public class TargetListener implements MessageListener {
+	public TargetListener() {
 	}
 	@Override
 	public void accept(Message message, Engine engine) {
 		if (message instanceof CollisionMessage) {
 			CollisionMessage collision = (CollisionMessage) message;
-			if (collision.obstacle.hasComponents(DangerousObstacle.class) && collision.target.hasComponents(BlobComponent.class))
-				popBlob(collision.target, engine);
-		}
-	}
-	private void popBlob(Entity target, Engine engine) {
-		if (target.hasComponents(Invulnerable.class)) {
-			return;
-		}
-		if (!engine.failing()) {
-			popped.play(0.75f);
-			engine.triggerFailure(1);
-			for (int i = 0;i < 5;i++) {
-				engine.spawnEntity(bits.getBlobBit(target, -1));
-			}
-			if (target.hasComponents(RailVelocity.class))
-				target.getComponent(RailVelocity.class).stop();
-			target.removeComponent(Burst.class);
-			target.removeComponent(BouncinessComponent.class);
-			target.removeComponent(BlobSprite.class);
+			if (collision.obstacle.hasComponents(TargetObstacle.class))
+				collision.obstacle.getComponent(TargetObstacle.class).activate(engine, collision.target, collision.obstacle);
 		}
 	}
 	

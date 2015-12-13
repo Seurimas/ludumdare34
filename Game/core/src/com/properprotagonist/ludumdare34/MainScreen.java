@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
@@ -63,71 +64,18 @@ public class MainScreen implements Screen {
 	Music theme;
 	OrthographicCamera camera;
 	Matrix4 stored = new Matrix4();
-	public MainScreen(LudumDare34 game) {
+	private final float deltaMod;
+	public MainScreen(LudumDare34 game, float deltaMod, boolean powerups) {
 		this.game = game;
 		engine = new Engine();
 		camera = new OrthographicCamera(800, 600);
-		theme = game.assets.get("main_theme.wav");
-		createPlayer();
-		// RAILS
-		engine.addComponentSystem(new RailMovementSystem());
-		engine.addComponentSystem(new CollisionSystem());
-		// GRAVITY
-		Sound bounce = game.assets.get("bounce.wav", Sound.class);
-		setupGravity(bounce);
-		// DANGER
-		BlobBits bits = new BlobBits(game.assets.get("FloorAndCeiling.png", Texture.class));
-		engine.addListener(CollisionMessage.class, new PoppedBlobListener(game.assets.get("pop.wav", Sound.class),
-				bits));
-		engine.addListener(CollisionMessage.class, bits);
-		engine.addListener(BounceMessage.class, bits);
+		theme = game.assets.get("main_theme.mp3");
+		EngineSetup.addCriticalSystems(engine);
+		player = EngineSetup.createPlayer(engine, true);
+		EngineSetup.setupBasicGame(engine, player, powerups);
 		
-		// BLOB
-		Texture obstacles = game.assets.get("Obstacles.png");
-		Texture environment = game.assets.get("FloorAndCeiling.png", Texture.class);
-		engine.addComponentSystem(new BurstSystem());
-		setupBasicGame(obstacles, environment);
-		
-//		engine.addRenderer(new DebugWeightRenderer());
-//		engine.addRenderer(new DebugEntityRenderer());
-		BitmapFont font = game.assets.get("impact.fnt", BitmapFont.class);
-		engine.addRenderer(new BackdropRenderer(environment, player));
-		engine.addRenderer(new QuoteSystem(font));
-		engine.addRenderer(new DistanceRenderer(player, font, game.uiBatch));
-		engine.addRenderer(new Extended9PatchRenderer());
-		engine.addRenderer(new SimpleSpriteRenderer());
-		engine.addRenderer(new PowerupRenderer());
-		engine.addRenderer(new BlobRenderer());
-	}
-	private void setupBasicGame(Texture obstacles, Texture environment) {
-		engine.addComponentSystem(new RailPowerupSpawner(player, Powerups.powerups));
-		engine.addComponentSystem(new RailObstacleSpawner(player, obstacles));
-		engine.addRenderer(new RailTargetCamera(player, camera));
-		engine.addComponentSystem(new RailScopeSystem(player));
-		engine.addComponentSystem(new PowerupSystem(player));
-		Powerups.initialize(environment);
-		Powerups.setup(engine, player);
-	}
-	private void setupGravity(Sound bounce) {
-		engine.addComponentSystem(new GravitySystem(5, -15));
-		engine.addComponentSystem(new GrowthSystem());
-		engine.addComponentSystem(new FloorSystem(bounce));
-		engine.addComponentSystem(new BouncinessSystem(6));
-	}
-	private void createPlayer() {
-		player = new Entity(new Rectangle(0, 100, 32, 32));
-		player.setComponent(BlobSprite.class, new BlobSprite((Texture) game.assets.get("BlobFull.png")));
-		player.setComponent(Weight.class, new Weight(2));
-		player.setComponent(FallingSpeed.class, new FallingSpeed());
-		player.setComponent(BouncinessComponent.class, new BouncinessComponent(2f / 3));
-//		dummy.setComponent(RailObstacle.class, new RailObstacle(false, 0, 50));
-		player.setComponent(RailVelocity.class, new RailVelocity());
-		player.getComponent(RailVelocity.class).increaseVelocity(200);
-		player.setComponent(WeightGrowth.class, new WeightGrowth(new BlobGrowthController(player)));
-		player.setComponent(Burst.class, new Burst(600, 0.5f));
-		player.setComponent(Collider.class, new Collider());
-		player.setComponent(BlobComponent.class, new BlobComponent());
-		engine.addEntity(player);
+		EngineSetup.setupRendering(engine, player, camera, game.uiBatch, true);
+		this.deltaMod = deltaMod;
 	}
 	public Engine getEngine() {
 		return engine;
@@ -136,7 +84,6 @@ public class MainScreen implements Screen {
 	public void show() {
 		stored.set(game.batch.getProjectionMatrix());
 		theme.setLooping(true);
-		theme.setVolume(0.5f);
 		theme.play();
 	}
 
@@ -144,12 +91,12 @@ public class MainScreen implements Screen {
 	public void render(float delta) {
 		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		engine.act(delta);
+		engine.act(delta * deltaMod);
 		game.batch.begin();
 		engine.draw(game.batch, game.shapes);
 		game.batch.end();
 		if (engine.failed())
-			game.fail();
+			game.fail((int)(player.getBounding().x / 200));
 	}
 
 	@Override
@@ -172,6 +119,7 @@ public class MainScreen implements Screen {
 	public void hide() {
 		theme.stop();
 		game.batch.setProjectionMatrix(stored);
+		game.shapes.setProjectionMatrix(stored);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ import com.properprotagonist.ludumdare34.utils.LDUtils;
 
 public class BlobBits implements MessageListener {
 	public static class PoppedBit implements Component {
-		
+		private int bouncesLeft = 3;
 	}
 	private final Texture texture;
 	public BlobBits(Texture texture) {
@@ -52,7 +52,7 @@ public class BlobBits implements MessageListener {
 		entity.setComponent(Weight.class, new Weight(bounds.height / 11f));
 		entity.setComponent(RailVelocity.class, new RailVelocity());
 		entity.getComponent(RailVelocity.class).increaseVelocity(LDUtils.getVelocityX(target));
-		entity.setComponent(BouncinessComponent.class, new BouncinessComponent(1));
+		entity.setComponent(BouncinessComponent.class, new BouncinessComponent(0.25f));
 		entity.setComponent(PoppedBit.class, new PoppedBit());
 		entity.setComponent(Collider.class, new Collider());
 		return entity;
@@ -84,8 +84,16 @@ public class BlobBits implements MessageListener {
 				stopBit(collision.target, collision.obstacle);
 		} else if (message instanceof BounceMessage) {
 			BounceMessage bounce = (BounceMessage) message;
-			if (bounce.bouncer.hasComponents(BlobComponent.class))
-				engine.spawnEntity(getBlobBit(bounce.bouncer, bounce.speed > 10 ? 5 : 3));
+			if (Math.abs(bounce.speed) > 8 && bounce.bouncer.hasComponents(BlobComponent.class))
+				engine.spawnEntity(getBlobBit(bounce.bouncer, 5));
+			else if (Math.abs(bounce.speed) > 12 && bounce.bouncer.hasComponents(BlobComponent.class))
+				engine.spawnEntity(getBlobBit(bounce.bouncer, 7));
+			else if (bounce.bouncer.hasComponents(PoppedBit.class)) {
+				PoppedBit bit = bounce.bouncer.getComponent(PoppedBit.class);
+				bit.bouncesLeft--;
+				if (bit.bouncesLeft < 0)
+					engine.removeEntity(bounce.bouncer);
+			}
 		}
 	}
 }

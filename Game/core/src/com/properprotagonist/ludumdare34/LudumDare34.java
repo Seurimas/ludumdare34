@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.properprotagonist.ludumdare34.ecs.menu.NextModeSystem.Mode;
 
 public class LudumDare34 extends Game {
 	public static final float SCREEN_HEIGHT = 600;
@@ -21,13 +22,17 @@ public class LudumDare34 extends Game {
 	public ShapeRenderer shapes;
 	@Override
 	public void create () {
+		assets.load("DontBurstTheBlob.png", Texture.class);
 		assets.load("BlobBurst.png", Texture.class);
 		assets.load("BlobFull.png", Texture.class);
 		assets.load("FloorAndCeiling.png", Texture.class);
 		assets.load("Background.png", Texture.class);
 		assets.load("Obstacles.png", Texture.class);
-		assets.load("main_theme.wav", Music.class);
+		assets.load("Targets.png", Texture.class);
+		assets.load("UI.png", Texture.class);
+		assets.load("main_theme.mp3", Music.class);
 		assets.load("bounce.wav", Sound.class);
+		assets.load("burst.wav", Sound.class);
 		assets.load("pop.wav", Sound.class);
 		assets.load("lose.wav", Sound.class);
 		assets.load("impact.fnt", BitmapFont.class);
@@ -39,13 +44,19 @@ public class LudumDare34 extends Game {
 	public void loading() {
 		setScreen(new LoadingScreen(this));
 	}
+	public Mode mode;
 	public void start() {
-		if (getScreen() instanceof MainScreen) {
-			((MainScreen)getScreen()).dispose();
-		}
-		setScreen(new MainScreen(this));
+		mode.begin(this);
 	}
-	public void fail() {
+	public void start(float deltaMod, boolean powerups, Mode mode) {
+		this.mode = mode;
+		setScreen(new MainScreen(this, deltaMod, powerups));
+	}
+	public void menu() {
+		setScreen(new MenuScreen(this));
+	}
+	public void fail(int distance) {
+		mode.setHighScore(distance);
 		setScreen(new FailureScreen(this));
 	}
 }

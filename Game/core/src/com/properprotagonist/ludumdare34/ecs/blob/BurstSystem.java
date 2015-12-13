@@ -2,6 +2,8 @@ package com.properprotagonist.ludumdare34.ecs.blob;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Sound;
+import com.properprotagonist.ludumdare34.ShakeCameraSystem;
 import com.properprotagonist.ludumdare34.ecs.Component;
 import com.properprotagonist.ludumdare34.ecs.ComponentSystem;
 import com.properprotagonist.ludumdare34.ecs.Engine;
@@ -19,6 +21,11 @@ public class BurstSystem implements ComponentSystem {
 			FallingSpeed.class,
 			Burst.class
 	};
+	
+	private final Sound sound;
+	public BurstSystem(Sound burst) {
+		this.sound = burst;
+	}
 
 	@Override
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
@@ -30,6 +37,8 @@ public class BurstSystem implements ComponentSystem {
 				falling.vy = 0;
 				if (entity.hasComponents(BurstUp.class))
 					falling.vy = entity.getComponent(BurstUp.class).vy;
+				sound.play();
+				engine.handleMessage(new ShakeCameraSystem.ShakeMessage(0.5f, 4));
 			}
 			float movement = burst.getModifier() * delta;
 			float progress = delta;

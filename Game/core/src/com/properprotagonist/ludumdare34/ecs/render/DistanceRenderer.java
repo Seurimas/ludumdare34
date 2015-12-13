@@ -35,7 +35,7 @@ public class DistanceRenderer implements RenderSystem {
 		batch.end();
 		uiBatch.begin();
 		int distance = (int) (player.getBounding().x / 200);
-		font.draw(uiBatch, String.format("Distance: %d", distance), 0, LudumDare34.SCREEN_HEIGHT);
+		font.draw(uiBatch, "Distance: " + distance, 0, LudumDare34.SCREEN_HEIGHT);
 		uiBatch.end();
 		batch.begin();
 	}

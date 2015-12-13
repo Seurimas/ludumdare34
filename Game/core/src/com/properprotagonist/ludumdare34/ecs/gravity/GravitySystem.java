@@ -30,7 +30,7 @@ public class GravitySystem implements ComponentSystem {
 			Weight entityWeight = entity.getComponent(Weight.class);
 			FallingSpeed velocity = entity.getComponent(FallingSpeed.class);
 			if (entity.hasComponents(AntiGrav.class)) {
-				velocity.vy += entityWeight.factor * delta * G;
+				velocity.vy += entityWeight.factor * delta * G / 2;
 				velocity.vy = Math.min(velocity.vy, -MAX_FALL_SPEED);
 			} else {
 				velocity.vy -= entityWeight.factor * delta * G;
