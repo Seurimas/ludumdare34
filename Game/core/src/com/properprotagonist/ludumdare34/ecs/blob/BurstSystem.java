@@ -31,7 +31,7 @@ public class BurstSystem implements ComponentSystem {
 	public void act(float delta, ComponentEntityList entities, Engine engine) {
 		for (Entity entity : entities) {
 			Burst burst = entity.getComponent(Burst.class);
-			if (!burst.isActive() && Gdx.input.isKeyJustPressed(Keys.ENTER)) {
+			if (!burst.isActive() && keyPressed()) {
 				burst.start();
 				FallingSpeed falling = entity.getComponent(FallingSpeed.class);
 				falling.vy = 0;
@@ -49,6 +49,10 @@ public class BurstSystem implements ComponentSystem {
 			entity.move(movement, 0);
 			burst.update(progress);
 		}
+	}
+
+	private boolean keyPressed() {
+		return Gdx.input.isKeyJustPressed(Keys.ENTER) || Gdx.input.isKeyJustPressed(Keys.A);
 	}
 
 	@Override

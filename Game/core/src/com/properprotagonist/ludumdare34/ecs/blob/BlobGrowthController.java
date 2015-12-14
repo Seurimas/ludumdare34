@@ -15,7 +15,7 @@ public class BlobGrowthController implements GrowthDetector {
 	public float getCurrentGrowthFactor() {
 		if (blob.hasComponents(Burst.class) && blob.getComponent(Burst.class).isActive())
 			return 0;
-		if (Gdx.input.isKeyPressed(Keys.SPACE))
+		if (Gdx.input.isKeyPressed(Keys.SPACE) || Gdx.input.isKeyJustPressed(Keys.B))
 			return 1;
 		else
 			return 0;
